@@ -1,0 +1,73 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+
+namespace WpfApp2
+{
+    /// <summary>
+    /// Logika interakcji dla klasy MainWindow.xaml
+    /// </summary>
+    public partial class MainWindow : Window
+    {
+        public MainWindow()
+        {
+            InitializeComponent();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            txtBok.Text = String.Empty;
+            txtPowierzchnia.Text = String.Empty;
+            txtObwod.Text = String.Empty;
+            lblKomunikat.Content = String.Empty;
+        }
+
+        private void txtBok_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            double bok; // wartość tej zmiennej będzie ustalona w metodzie TryParse (argument out)
+            if (double.TryParse(txtBok.Text, out bok) && bok >= 0)
+            {
+                txtPowierzchnia.Text = Math.Pow(bok, 2.0).ToString();
+                txtObwod.Text = (bok * 4).ToString();
+                lblKomunikat.Content = String.Empty;
+            }
+            else
+            {
+                lblKomunikat.Content = "Wpisz liczbę dodatnią";
+            }
+        }
+    }
+}
+
+//--------------------------------------------------------------------------
+
+<Window x:Class="WpfApp2.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfApp2"
+        mc:Ignorable="d"
+        Title="Kwadrat" Height="450" Width="800">
+    <Grid>
+        <Label Content="Bok" HorizontalAlignment="Left" Margin="54,46,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.396,0.535" Width="93"/>
+        <Label Content="Powierzchnia" HorizontalAlignment="Left" Margin="54,77,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.396,0.535" Width="93"/>
+        <Label Content="Obwód" HorizontalAlignment="Left" Margin="54,108,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.396,0.535" Width="93"/>
+        <TextBox x:Name="txtBok"  HorizontalAlignment="Left" Height="26" Margin="152,46,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="209" TextChanged="txtBok_TextChanged"/>
+        <TextBox x:Name="txtPowierzchnia"  IsEnabled="False" HorizontalAlignment="Left" Height="26" Margin="152,77,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="209"/>
+        <TextBox x:Name="txtObwod"  IsEnabled="False"  HorizontalAlignment="Left" Height="26" Margin="152,108,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="209"/>
+        <Label x:Name="lblKomunikat" Content="" HorizontalAlignment="Left" Margin="407,46,0,0" VerticalAlignment="Top" RenderTransformOrigin="-4.049,-0.367" Width="249" Foreground="Red"/>
+        <Button x:Name="btnWyczysc"  Content="Wyczyść" HorizontalAlignment="Left" Height="98" Margin="233,233,0,0" VerticalAlignment="Top" Width="349" Click="Button_Click"/>
+    </Grid>
+</Window>
