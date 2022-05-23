@@ -1,0 +1,61 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+
+namespace WpfApp2
+{
+    /// <summary>
+    /// Logika interakcji dla klasy MainWindow.xaml
+    /// </summary>
+    public partial class MainWindow : Window
+    {
+        public MainWindow()
+        {
+            InitializeComponent();
+        }
+
+        private void btnStart_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Hello world!");
+        }
+
+        private void btnTime_MouseEnter(object sender, MouseEventArgs e)
+        {
+            DateTime date1 = DateTime.Now;
+            btnTime.Content = date1.ToString("T");
+        }
+
+        private void btnTime_MouseLeave(object sender, MouseEventArgs e)
+        {
+            btnTime.Content = "Czas";
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------------------------------------------
+
+<Window x:Class="WpfApp2.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfApp2"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <Button x:Name="btnStart" Content="Start" HorizontalAlignment="Left" Height="83" Margin="79,46,0,0" VerticalAlignment="Top" Width="224" FontFamily="Times New Roman" FontSize="20" FontWeight="Bold" Click="btnStart_Click"/>
+        <Button x:Name="btnTime" Content="Czas" HorizontalAlignment="Left" Height="83" Margin="79,210,0,0" VerticalAlignment="Top" Width="224" FontFamily="Times New Roman" FontSize="20" FontWeight="Bold" MouseEnter="btnTime_MouseEnter" MouseLeave="btnTime_MouseLeave"/>
+
+    </Grid>
+</Window>
