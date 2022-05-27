@@ -7,11 +7,13 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
+using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrayNotify;
 
 namespace WpfApp2
 {
@@ -25,12 +27,18 @@ namespace WpfApp2
             InitializeComponent();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void btnWyczysc_Click(object sender, RoutedEventArgs e)
         {
             txtBok.Text = String.Empty;
             txtPowierzchnia.Text = String.Empty;
             txtObwod.Text = String.Empty;
             lblKomunikat.Content = String.Empty;
+            rectangle1.Height = 0;
+            rectangle1.Width = 0;
+            cbOpacity.IsChecked = false;
+            cmbKolory.SelectedIndex = 0;
+            rbUkryj.IsChecked = false;
+            rbPokaz.IsChecked = false;
         }
 
         private void txtBok_TextChanged(object sender, TextChangedEventArgs e)
@@ -43,12 +51,55 @@ namespace WpfApp2
                 lblKomunikat.Content = String.Empty;
             }
             else
-            {
                 lblKomunikat.Content = "Wpisz liczbę dodatnią";
+            
+        }
+
+        private void btnRysuj_Click(object sender, RoutedEventArgs e)
+        {
+            double bok;
+            if (double.TryParse(txtBok.Text, out bok) && bok <= 300)
+            {
+                rectangle1.Height = bok;
+                rectangle1.Width = bok;
+                SolidColorBrush color = (SolidColorBrush)new BrushConverter().ConvertFromString(cmbKolory.Text);
+                rectangle1.Stroke = color;
+                rectangle1.Fill = color;
+                rectangle1.Opacity = (cbOpacity.IsChecked.Value) ? 0.5 : 1;
+                rbPokaz.IsChecked = true;
+            }
+            else
+                lblKomunikat.Content = "Brak danych lub zbyt duży bok";
+        }
+
+        private void rbUkryj_Checked(object sender, RoutedEventArgs e)
+        {
+            rectangle1.Height = 0;
+            rectangle1.Width = 0;
+            rbPokaz.IsChecked = false;
+        }
+
+        private void rbPokaz_Checked(object sender, RoutedEventArgs e)
+        {
+            rbUkryj.IsChecked = false;
+            double bok = Double.Parse(txtBok.Text);
+            if (bok <= 300)
+            {
+                rectangle1.Height = bok;
+                rectangle1.Width = bok;
+                SolidColorBrush color = (SolidColorBrush)new BrushConverter().ConvertFromString(cmbKolory.Text);
+                rectangle1.Stroke = color;
+                rectangle1.Fill = color;
+                rectangle1.Opacity = (cbOpacity.IsChecked.Value) ? 0.5 : 1;
             }
         }
 
-       
+        private void btnKolorTla_Click(object sender, RoutedEventArgs e)
+        {
+            ColorDialog dbox = new ColorDialog();
+            if(dbox.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                Background = new SolidColorBrush(Color.FromArgb(dbox.Color.A, dbox.Color.R, dbox.Color.G, dbox.Color.B) );
+        }
     }
 }
 /-----------------------------------------------------------------------------
@@ -61,26 +112,28 @@ namespace WpfApp2
         mc:Ignorable="d"
         Title="Rysuj Kwadrat" Height="500" Width="700">
     <Grid>
-        <Label Content="Bok" HorizontalAlignment="Left" Margin="27,37,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.396,0.535" Width="93"/>
-        <Label Content="Powierzchnia" HorizontalAlignment="Left" Margin="27,68,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.396,0.535" Width="93"/>
-        <Label Content="Obwód" HorizontalAlignment="Left" Margin="27,99,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.396,0.535" Width="93"/>
-        <Label Content="Kolor" HorizontalAlignment="Left" Margin="27,130,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.396,0.535" Width="93"/>
-
-        <TextBox x:Name="txtBok"  HorizontalAlignment="Left" Height="26" Margin="125,37,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="209" TextChanged="txtBok_TextChanged"/>
-        <TextBox x:Name="txtPowierzchnia"  IsEnabled="False" HorizontalAlignment="Left" Height="26" Margin="125,68,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="209"/>
-        <TextBox x:Name="txtObwod"  IsEnabled="False"  HorizontalAlignment="Left" Height="26" Margin="125,99,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="209"/>
-        <Label x:Name="lblKomunikat" Content="" HorizontalAlignment="Left" Margin="374,37,0,0" VerticalAlignment="Top" RenderTransformOrigin="-4.049,-0.367" Width="255" Foreground="Red"/>
-        <Button x:Name="btnWyczysc"  Content="Wyczyść" HorizontalAlignment="Left" Height="40" Margin="125,272,0,0" VerticalAlignment="Top" Width="209" Click="Button_Click"/>
-        <ComboBox HorizontalAlignment="Left" Height="26" Margin="125,130,0,0" VerticalAlignment="Top" Width="209" SelectedIndex="0">
+        <Label Content="Bok" HorizontalAlignment="Left" Margin="27,81,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.396,0.535" Width="93"/>
+        <Label Content="Powierzchnia" HorizontalAlignment="Left" Margin="27,112,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.396,0.535" Width="93"/>
+        <Label Content="Obwód" HorizontalAlignment="Left" Margin="27,143,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.396,0.535" Width="93"/>
+        <Label Content="Kolor" HorizontalAlignment="Left" Margin="27,174,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.396,0.535" Width="93"/>
+        <TextBox x:Name="txtBok"  HorizontalAlignment="Left" Height="26" Margin="125,81,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="209" TextChanged="txtBok_TextChanged"/>
+        <TextBox x:Name="txtPowierzchnia"  IsEnabled="False" HorizontalAlignment="Left" Height="26" Margin="125,112,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="209"/>
+        <TextBox x:Name="txtObwod"  IsEnabled="False"  HorizontalAlignment="Left" Height="26" Margin="125,143,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="209"/>
+        <Label x:Name="lblKomunikat" Content="" HorizontalAlignment="Left" Margin="125,49,0,0" VerticalAlignment="Top" RenderTransformOrigin="-4.049,-0.367" Width="209" Foreground="Red"/>
+        <Button x:Name="btnWyczysc"  Content="Wyczyść" HorizontalAlignment="Left" Height="40" Margin="125,316,0,0" VerticalAlignment="Top" Width="209" Click="btnWyczysc_Click"/>
+        <ComboBox x:Name="cmbKolory" HorizontalAlignment="Left" Height="26" Margin="125,174,0,0" VerticalAlignment="Top" Width="209" SelectedIndex="0">
             <ComboBoxItem Content="Black"/>
             <ComboBoxItem Content="Red"/>
             <ComboBoxItem Content="Yellow"/>
             <ComboBoxItem Content="Green"/>
             <ComboBoxItem Content="Blue"/>
         </ComboBox>
-        <CheckBox Content="Półprzeźroczysty" HorizontalAlignment="Left" Margin="125,161,0,0" VerticalAlignment="Top"/>
-        <Button Content="Rysuj" HorizontalAlignment="Left" Height="40" Margin="125,227,0,0" VerticalAlignment="Top" Width="209"/>
-
-
+        <CheckBox x:Name="cbOpacity" Content="Półprzeźroczysty" HorizontalAlignment="Left" Margin="125,205,0,0" VerticalAlignment="Top"/>
+        <Button Content="Rysuj" HorizontalAlignment="Left" Height="40" Margin="125,271,0,0" VerticalAlignment="Top" Width="209" Click="btnRysuj_Click"/>
+        <Rectangle x:Name="rectangle1" HorizontalAlignment="Left" Height="0" Margin="370,81,0,0" Stroke="Black" VerticalAlignment="Top" Width="0"/>
+        <RadioButton x:Name="rbUkryj" Content="Ukryj" HorizontalAlignment="Left" Margin="125,242,0,0" VerticalAlignment="Top" Checked="rbUkryj_Checked"/>
+        <RadioButton x:Name="rbPokaz" Content="Pokaż" HorizontalAlignment="Left" Margin="205,242,0,0" VerticalAlignment="Top" Checked="rbPokaz_Checked"/>
+        <Image Source="https://pngimg.com/uploads/github/github_PNG58.png" HorizontalAlignment="Center" Height="647" VerticalAlignment="Center" Width="648" RenderTransformOrigin="0.54,0.514" Opacity="0.5" Panel.ZIndex="-1" />
+        <Button x:Name="btnKolorTla" Content="Kolor tła" HorizontalAlignment="Left" Height="20" Margin="598,47,0,0" VerticalAlignment="Top" Width="64" BorderThickness="1,1,1,1" Click="btnKolorTla_Click"/>
     </Grid>
 </Window>
